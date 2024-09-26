@@ -5,7 +5,7 @@ import json
 
 # Configurações da API
 GITHUB_API_URL = "https://api.github.com/graphql"
-TOKEN = ""  # Insira seu token do GitHub aqui
+TOKEN = ""  
 
 headers = {"Authorization": f"Bearer {TOKEN}"}
 
@@ -19,14 +19,14 @@ def run_query(query, variables={}):
             return response_json
         else:
             print("Erro: 'data' não encontrado na resposta.")
-            print("Resposta completa:", json.dumps(response_json, indent=4))  # Exibe a resposta completa para depuração
+            print("Resposta completa:", json.dumps(response_json, indent=4))  
             raise Exception("A resposta da API não contém 'data'.")
     else:
         print(f"Erro na consulta: Código {request.status_code}")
-        print(f"Resposta completa: {request.text}")  # Exibe a resposta completa em caso de erro
+        print(f"Resposta completa: {request.text}")  
         raise Exception(f"Query failed to run by returning code of {request.status_code}. {query}")
 
-# Consulta GraphQL para coletar dados dos repositórios de Java
+# Consulta GraphQL 
 query = """
 query ($after: String) {
   search(query: "language:Java stars:>1", type: REPOSITORY, first: 10, after: $after) {
@@ -58,13 +58,11 @@ query ($after: String) {
 }
 """
 
-# Variável para paginação
 variables = {"after": None}
 resultados = []
 total_repos = 0
 max_repos = 1000
 
-# Coletar dados de até 1000 repositórios
 while total_repos < max_repos:
     result = run_query(query, variables)
     data = result['data']['search']

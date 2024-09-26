@@ -11,7 +11,7 @@ CK_JAR_PATH = r'C:\Users\giova\OneDrive\Documentos\Puc\6 periodo\Analyze-java-re
 CLONE_DIR = r'repos'
 OUTPUT_DIR = r'output'
 
-# Nova consulta GraphQL
+# Consulta GraphQL
 QUERY = """
 query ($cursor: String) {
   search(query: "language:Java stars:>100", type: REPOSITORY, first: 100, after: $cursor) {
@@ -48,7 +48,6 @@ def fetch_repositories():
             json={'query': QUERY, 'variables': {'cursor': cursor}}
         )
 
-        # Verificar se a resposta tem erro
         if response.status_code != 200:
             print(f"Erro na resposta da API: {response.status_code} {response.text}")
             break
@@ -80,7 +79,7 @@ def clone_repository(owner, repo_name):
 
 # Função para analisar repositórios com CK
 def analyze_with_ck(repo_dir, output_dir, name):
-    # Executa o CK e espera até que ele termine
+    
     process = subprocess.Popen(
         ["java", "-jar", CK_JAR_PATH, repo_dir],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -93,11 +92,11 @@ def analyze_with_ck(repo_dir, output_dir, name):
     
     # Verifica se os arquivos .csv foram gerados na pasta raiz do projeto
     for file_name in ["class.csv", "method.csv", "variable.csv", "field.csv"]:
-        src_file = os.path.join(os.getcwd(), file_name)  # Arquivos gerados na pasta raiz
-        dst_file = os.path.join(output_dir, file_name)  # Destino correto no diretório de saída
+        src_file = os.path.join(os.getcwd(), file_name)  
+        dst_file = os.path.join(output_dir, file_name)  
         
         if os.path.exists(src_file):
-            shutil.move(src_file, dst_file)  # Mover os arquivos da raiz para o diretório de saída
+            shutil.move(src_file, dst_file)  
         else:
             print(f"Erro: {file_name} não foi encontrado no diretório {os.getcwd()}.")
 
@@ -106,7 +105,6 @@ def analyze_with_ck(repo_dir, output_dir, name):
 def handle_remove_readonly(func, path, exc):
     exc_type, exc_value, exc_tb = exc
     if exc_type is PermissionError:
-        # Tenta alterar as permissões do arquivo e remover novamente
         os.chmod(path, stat.S_IWRITE)
         func(path)
     else:

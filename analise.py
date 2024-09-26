@@ -1,8 +1,7 @@
-# Importa as bibliotecas necessárias
 import pandas as pd
 
 # Caminho para o arquivo CSV
-file_path = '..\Analyze-java-repositories\DadosRQ.csv'  # Altere para o caminho correto
+file_path = '..\Analyze-java-repositories\DadosRQ.csv'  
 
 # Leitura do arquivo CSV com a codificação correta
 df = pd.read_csv(file_path, encoding='ISO-8859-1')
